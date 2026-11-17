@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Customer Login – AS Financial Services</title>
+  <meta name="description" content="Customer login for AS Financial Services.">
+  <meta name="theme-color" content="#10294D">
+  <link rel="icon" href="assets/img/brand/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/pro-light.css">
+</head>
+<body class="login-page" data-base="">
+  <style>
+    body.login-page { min-height: 100vh; background: radial-gradient(circle at 50% 35%, #fff 0, var(--cream) 68%); }
+    .login-page .topbar, .login-page .nav, .login-page .mobile-nav, .login-page #site-footer { display: none; }
+    .login-page .site-header { position: static; background: transparent; border: 0; }
+    .login-page .header-inner { min-height: 88px; }
+    .login-page .header-actions { gap: 0; }
+    .login-page .header-phone, .login-page .header-actions .menu-toggle { display: none; }
+    .login-page .header-actions .btn { border-color: var(--line); }
+    .login-page .auth { display: grid; width: min(1040px, 100%); min-height: 0; margin: 0 auto; grid-template-columns: .9fr 1.1fr; align-items: stretch; padding: 32px 24px 60px; }
+    .login-page .auth-art { display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: clamp(28px, 5vw, 50px); color: #fff; background: linear-gradient(150deg, #10294D, #244E83); border-radius: 20px 0 0 20px; }
+    .login-page .auth-art > svg { width: min(220px, 100%); height: auto; }
+    .login-page .auth-art h2 { color: #fff; font-size: clamp(1.7rem, 3vw, 2.3rem); }
+    .login-page .auth-art p { color: #E1E8F1; }
+    .login-page .auth-art ul { display: grid; gap: 10px; list-style: none; }
+    .login-page .auth-art li { display: flex; align-items: center; gap: 10px; color: #F4F6FA; font-size: .9rem; }
+    .login-page .auth-art li svg { width: 18px; height: 18px; color: var(--gold-light); }
+    .login-page .auth-form { display: grid; place-items: center; width: 100%; padding: clamp(28px, 5vw, 50px); background: #fff; border: 1px solid var(--line); border-left: 0; border-radius: 0 20px 20px 0; box-shadow: 0 24px 65px rgba(16, 41, 77, .10); }
+    .login-page .auth-card { width: min(440px, 100%); margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+    .login-page .auth-card h1 { margin: 0 0 8px; font-size: clamp(1.9rem, 5vw, 2.35rem); }
+    .login-page .auth-card > p { margin: 0 0 26px; color: var(--muted); }
+    .login-page .login-kicker { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; color: var(--gold-deep); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .login-page .login-kicker::before { content: ""; width: 20px; height: 2px; background: var(--gold); }
+    .login-page .tabs { display: flex; gap: 4px; margin-bottom: 24px; padding: 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--cream); }
+    .login-page .tabs button { flex: 1; min-height: 40px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: 700 .84rem var(--sans); cursor: pointer; }
+    .login-page .tabs button.on { background: #fff; color: var(--navy); box-shadow: var(--shadow-sm); }
+    .login-page .lbl { display: block; margin-bottom: 7px; color: var(--ink); font-size: .82rem; font-weight: 700; }
+    .login-page .input { width: 100%; padding: 12px 14px; border: 1px solid #D9D5C9; border-radius: 9px; background: #fff; color: var(--ink); outline: none; }
+    .login-page .input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201, 162, 74, .16); }
+    .login-page .input.err { border-color: var(--red); }
+    .login-page .pw { position: relative; }
+    .login-page .pw button { position: absolute; top: 50%; right: 10px; padding: 6px; border: 0; background: transparent; color: var(--muted); transform: translateY(-50%); cursor: pointer; }
+    .login-page .pw svg { width: 18px; height: 18px; }
+    .login-page .row-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .login-page .check { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: .82rem; }
+    .login-page .check input { accent-color: var(--gold-deep); }
+    .login-page .link { color: var(--navy); font-size: .82rem; font-weight: 700; text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+    .login-page .divider { position: relative; color: var(--muted); font-size: .78rem; text-align: center; }
+    .login-page .divider::before { position: absolute; top: 50%; right: 0; left: 0; border-top: 1px solid var(--line); content: ""; }
+    .login-page .divider span { position: relative; padding: 0 10px; background: #fff; }
+    .login-page .btn-outline { color: var(--navy); }
+    .login-page .err-msg { margin-top: 5px; color: var(--red); font-size: .76rem; }
+    .login-page .hidden { display: none !important; }
+    .login-page .input { min-height: 48px; }
+    .login-page .btn-block { min-height: 48px; }
+    .login-page .divider { margin: 23px 0 17px; }
+    .login-page .demo-hint { margin: 20px 0 0 !important; padding: 11px 13px; border: 1px solid #E9DFC3; border-radius: 10px; background: #FBF7EC; color: #675728; font-size: .78rem; line-height: 1.5; text-align: left; }
+    .login-page .auth-card > p:last-child:not(.demo-hint) { margin: 16px 0 0; }
+    @media (max-width: 760px) {
+      .login-page .header-inner { min-height: 72px; }
+      .login-page .brand-logo { height: 44px; }
+      .login-page .auth { width: min(520px, 100%); grid-template-columns: 1fr; padding: 20px 16px 40px; }
+      .login-page .auth-art { display: none; }
+      .login-page .auth-form { padding: clamp(26px, 6vw, 40px); border: 1px solid var(--line); border-radius: 20px; }
+    }
+  </style>
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-left">
+        <span class="topbar-badge"><span class="dot"></span> Loan assistance in Medipalli, Hyderabad</span>
+        <span class="topbar-item"><svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg> <span class="full">Medipalli, Hyderabad</span></span>
+        <span class="topbar-item"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg> <span class="full" data-setting="hours">Mon – Sat · 9:30 AM – 7:00 PM</span></span>
+      </div>
+      <div class="topbar-right">
+        <a class="topbar-item" href="tel:+919182703079" data-setting="phone"><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg> 91827 03079</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="AS Financial home"><img class="brand-logo" src="assets/img/brand/logo-full.png" alt="AS Financial Services and Solutions — Your Goals, Our Solutions" width="200" height="51"></a>
+      <nav class="nav" aria-label="Primary">
+        <div class="nav-item">
+          <a class="nav-link" href="loans.html">Loan Products <svg class="icon icon-chevron" aria-hidden="true"><use href="#i-chevron"></use></svg></a>
+          <div class="dropdown dropdown-wide">
+            <span class="dropdown-head">Retail loans</span>
+            <a href="loans.html#home-loan"><svg class="icon" aria-hidden="true"><use href="#i-home"></use></svg><span>Home Loan<small>Purchase, construction &amp; top-up</small></span></a>
+            <a href="loans.html#personal-loan"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg><span>Personal Loan<small>For every personal milestone</small></span></a>
+            <a href="loans.html#business-loan"><svg class="icon" aria-hidden="true"><use href="#i-briefcase"></use></svg><span>Business Loan<small>Working capital &amp; expansion</small></span></a>
+            <a href="loans.html#mortgage-loan"><svg class="icon" aria-hidden="true"><use href="#i-key"></use></svg><span>Mortgage / LAP<small>Loan against your property</small></span></a>
+            <a href="loans.html#education-loan"><svg class="icon" aria-hidden="true"><use href="#i-graduation"></use></svg><span>Education Loan<small>India &amp; overseas studies</small></span></a>
+            <a href="loans.html#plot-loan"><svg class="icon" aria-hidden="true"><use href="#i-plot"></use></svg><span>Plot &amp; Land Loan<small>Build your future address</small></span></a>
+            <span class="dropdown-head">More solutions</span>
+            <a href="loans.html#car-loan"><svg class="icon" aria-hidden="true"><use href="#i-car"></use></svg><span>Car Loan<small>New &amp; used vehicles</small></span></a>
+            <a href="loans.html#doctor-loan"><svg class="icon" aria-hidden="true"><use href="#i-stethoscope"></use></svg><span>Doctor Loan<small>Tailored for medical professionals</small></span></a>
+            <a href="loans.html#balance-transfer"><svg class="icon" aria-hidden="true"><use href="#i-transfer"></use></svg><span>Balance Transfer<small>Lower your existing EMI</small></span></a>
+            <a href="loans.html#insurance"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>Insurance<small>Life, health &amp; general cover</small></span></a>
+          </div>
+        </div>
+        <a class="nav-link" href="calculators.html">Calculators</a>
+        <a class="nav-link" href="guides.html">Guides</a>
+        <a class="nav-link" href="index.html#why-us">Why AS</a>
+        <a class="nav-link" href="index.html#partners">Partners</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="header-phone" href="tel:+919182703079" data-setting="phone"><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg><span><small>Talk to an advisor</small><strong>91827 03079</strong></span></a>
+        <a class="btn btn-outline btn-sm" href="index.html">Back to site</a>
+        <button class="menu-toggle" data-menu-open aria-label="Open menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" aria-label="Mobile menu">
+    <div class="mobile-nav-head">
+      <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/brand/logo-full.png" alt="AS Financial Services and Solutions — Your Goals, Our Solutions" width="200" height="51"></a>
+      <button class="menu-toggle" data-menu-close aria-label="Close menu"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+    </div>
+    <a class="m-link" href="index.html">Home</a>
+    <a class="m-link" href="loans.html">Loan Products</a>
+    <a class="m-link" href="emi-calculator.html">EMI Calculator</a>
+    <a class="m-link" href="about.html">About Us</a>
+    <a class="m-link" href="contact.html">Contact</a>
+    <div class="m-cta">
+      <a class="btn btn-outline btn-block" href="index.html">Back to site</a>
+      <a class="btn btn-outline btn-block" href="tel:+919182703079" data-setting="phone"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-phone"></use></svg> Call 91827 03079</a>
+    </div>
+  </div>
+
+  <main class="auth">
+  <div class="auth-art">
+    <svg viewBox="0 0 320 180" width="320" aria-hidden="true"><g fill="none" stroke="#E3BE4C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="10,150 70,110 120,125 190,60 250,75 310,20"/><rect x="20" y="120" width="26" height="50" fill="#E3BE4C" fill-opacity=".15"/><rect x="60" y="95" width="26" height="75" fill="#E3BE4C" fill-opacity=".15"/><rect x="100" y="110" width="26" height="60" fill="#E3BE4C" fill-opacity=".15"/><rect x="140" y="80" width="26" height="90" fill="#E3BE4C" fill-opacity=".15"/></g><circle cx="270" cy="40" r="26" fill="#E3BE4C" opacity=".9"/></svg>
+    <h2>Welcome back to AS Financial Services</h2><p>Track applications, compare lenders and manage your documents in one secure place.</p>
+    <ul><li id="b1"></li><li id="b2"></li><li id="b3"></li></ul>
+  </div>
+  <div class="auth-form"><div class="auth-card">
+    <span class="login-kicker">Customer portal</span>
+    <h1>Customer Login</h1><p>Sign in to your customer dashboard.</p>
+    <div class="tabs"><button class="on" data-tab="pw">Password</button><button data-tab="otp">Login with OTP</button></div>
+    <form id="f-pw" novalidate>
+      <div style="margin-bottom:16px"><label class="lbl">Email or mobile number</label><input class="input" name="idf" autocomplete="username" placeholder="you@example.com or 9876543210"></div>
+      <div style="margin-bottom:16px"><label class="lbl">Password</label><div class="pw"><input class="input" name="pass" type="password" autocomplete="current-password" placeholder="Your password"><button type="button" aria-label="Show password"></button></div></div>
+      <div class="row-between" style="margin-bottom:22px"><label class="check"><input type="checkbox" name="remember"> Remember me</label><a class="link" href="forgot-password.html">Forgot password?</a></div>
+      <button class="btn btn-gold btn-block" type="submit">Login</button>
+    </form>
+    <form id="f-otp" class="hidden" novalidate>
+      <div style="margin-bottom:22px"><label class="lbl">Email or registered mobile number</label><input class="input" name="idf" placeholder="you@example.com or 9876543210"></div>
+      <button class="btn btn-gold btn-block" type="submit">Send OTP (demo)</button>
+    </form>
+    <p class="demo-hint">Demo access: <strong>demo@customer.com</strong> · <strong>Demo@123</strong></p>
+    <div class="divider"><span>New to AS Financial Services?</span></div>
+    <a class="btn btn-outline btn-block" href="register.html">Create new account</a>
+    <p style="text-align:center;margin-top:22px;font-size:.88rem;color:var(--muted)">Are you an administrator? <a class="link" href="admin/login.html">Admin Login</a></p>
+    <p style="text-align:center;margin-top:14px;font-size:.75rem;color:var(--muted)">Demo authentication is simulated in your browser. Real sites need secure server-side login.</p>
+  </div></div>
+</main>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script>
+<script>
+const {$,setErr,V,icon}=UI;
+UI.pwToggle(document);
+const footer = document.getElementById('site-footer');
+if (footer) {
+  footer.innerHTML = '<footer class="footer"><div class="container"><div class="foot-grid"><div><a class="logo" href="index.html"><span class="logo-mark">AT</span><span>AS Financial Services</span></a><p>Premium financial guidance and loan assistance. We help you compare options and prepare your application with clarity.</p></div>' +
+    '<div><h4>Services</h4><a href="service.html?id=personal-loan">Personal Loans</a><a href="service.html?id=home-loan">Home Loans</a><a href="service.html?id=business-loan">Business Loans</a><a href="service.html?id=education-loan">Education Loans</a><a href="service.html?id=vehicle-loan">Vehicle Loans</a><a href="service.html?id=loan-against-property">Loan Against Property</a></div>' +
+    '<div><h4>Company</h4><a href="about.html">About Us</a><a href="lenders.html">Lender Partners</a><a href="compare.html">Compare Loans</a><a href="emi-calculator.html">EMI Calculator</a><a href="guides.html">Guides</a><a href="contact.html">Contact</a></div>' +
+    '<div><h4>Account</h4><a href="login.html">Customer Login</a><a href="register.html">Create Account</a><a href="admin/login.html">Admin Login</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a></div></div>' +
+    '<div class="foot-bottom"><span>© 2026 AS Financial Services. Demonstration project — not a real financial institution.</span><span>Rates and lenders shown are sample data.</span></div></div></footer>';
+}
+$('#b1').innerHTML=icon('check')+' Live application tracking';$('#b2').innerHTML=icon('check')+' Save preferred lenders';$('#b3').innerHTML=icon('check')+' Upload documents (demo)';
+const q=new URLSearchParams(location.search);
+function safeNext(){return 'dashboard.html'}
+if(AT.Auth.customer()&&!q.get('force')){location.replace('dashboard.html')}
+if(q.get('registered'))UI.toast('Account created. Please log in.','ok');
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$('#f-pw').classList.toggle('hidden',b.dataset.tab!=='pw');$('#f-otp').classList.toggle('hidden',b.dataset.tab!=='otp')});
+$('#f-pw').addEventListener('submit',e=>{e.preventDefault();const f=e.target;let ok=true;
+ const idf=f.idf.value.trim();ok=setErr(f.idf,!idf?'Enter your email or mobile number.':(!V.email(idf)&&!V.mobile(idf)?'Enter a valid email address or 10-digit mobile number.':''))&&ok;
+ ok=setErr(f.pass,!f.pass.value?'Enter your password.':'')&&ok;if(!ok)return;
+ const r=AT.Auth.loginCustomer(idf,f.pass.value,f.remember.checked);
+ if(!r.ok){setErr(f.pass,r.msg);return}
+ UI.toast('Login successful. Redirecting…','ok');setTimeout(()=>location.href=safeNext(),500)});
+$('#f-otp').addEventListener('submit',e=>{e.preventDefault();const f=e.target;const idf=f.idf.value.trim();
+ if(!setErr(f.idf,!idf?'Enter your email or mobile number.':(!V.email(idf)&&!V.mobile(idf)?'Enter a valid email address or 10-digit mobile number.':'')))return;
+ const c=AT.Auth.findCustomer(idf);if(!c){setErr(f.idf,'No account found with these details.');return}
+ sessionStorage.setItem('asfs_otp',JSON.stringify({id:c.id,mode:'login',next:safeNext(),dest:c.mobile.replace(/\d(?=\d{3})/g,'•')}));location.href='otp.html'});
+</script></body></html>

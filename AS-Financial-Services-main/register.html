@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create Account – AS Financial Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="at-assets/css/style.css"></head>
+<body data-base="">
+<div id="site-header"></div>
+<main class="auth">
+  <div class="auth-art">
+    <h2>Start your financial journey</h2><p>Create a free demo account to apply for loans, compare lenders and track your progress.</p>
+    <ul><li id="b1"></li><li id="b2"></li><li id="b3"></li></ul>
+  </div>
+  <div class="auth-form"><div class="auth-card">
+    <h1>Create Account</h1><p>Customer registration (demo).</p>
+    <form id="f" novalidate>
+      <div style="margin-bottom:14px"><label class="lbl">Full name</label><input class="input" name="name" autocomplete="name" placeholder="Your full name"></div>
+      <div style="margin-bottom:14px"><label class="lbl">Email</label><input class="input" name="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+      <div style="margin-bottom:14px"><label class="lbl">Mobile number</label><input class="input" name="mobile" inputmode="numeric" maxlength="10" placeholder="10-digit mobile"></div>
+      <div style="margin-bottom:14px"><label class="lbl">Password</label><div class="pw"><input class="input" name="password" type="password" autocomplete="new-password" placeholder="Min 8 chars, upper, lower, number"><button type="button" aria-label="Show password"></button></div></div>
+      <div style="margin-bottom:14px"><label class="lbl">Confirm password</label><div class="pw"><input class="input" name="confirm" type="password" autocomplete="new-password" placeholder="Re-enter password"><button type="button" aria-label="Show password"></button></div></div>
+      <div style="margin-bottom:20px"><label class="check"><input type="checkbox" name="terms"> <span>I agree to the <a class="link" href="terms.html" target="_blank">Terms &amp; Conditions</a> and <a class="link" href="privacy.html" target="_blank">Privacy Policy</a></span></label><div class="err-msg" id="terms-err"></div></div>
+      <button class="btn btn-gold btn-block" type="submit">Create Account</button>
+    </form>
+    <p style="text-align:center;margin-top:22px;font-size:.9rem">Already have an account? <a class="link" href="login.html">Login</a></p>
+    <p style="text-align:center;margin-top:10px;font-size:.75rem;color:var(--muted)">Accounts created here are always customer accounts and can only be stored in this browser (demo).</p>
+  </div></div>
+</main>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script>
+<script>
+UI.mount('');const {$,setErr,V,icon}=UI;
+$('#b1').innerHTML=icon('check')+' Free demo account';$('#b2').innerHTML=icon('check')+' Simulated OTP verification';$('#b3').innerHTML=icon('check')+' Track status in real time';
+$('#f').addEventListener('submit',e=>{e.preventDefault();const f=e.target;let ok=true;
+ ok=setErr(f.elements.name,f.elements.name.value.trim().length<2?'Please enter your full name.':'')&&ok;
+ ok=setErr(f.email,!V.email(f.email.value.trim())?'Enter a valid email address.':'')&&ok;
+ ok=setErr(f.mobile,!V.mobile(f.mobile.value.trim())?'Enter a valid 10-digit mobile number starting with 6–9.':'')&&ok;
+ ok=setErr(f.password,!V.pass(f.password.value)?'Use at least 8 characters with uppercase, lowercase and a number.':'')&&ok;
+ ok=setErr(f.confirm,f.confirm.value!==f.password.value?'Passwords do not match.':'')&&ok;
+ $('#terms-err').textContent=f.terms.checked?'':'You must accept the terms to continue.';ok=f.terms.checked&&ok;if(!ok)return;
+ const r=AT.Auth.register({name:f.elements.name.value,email:f.email.value,mobile:f.mobile.value.trim(),password:f.password.value});
+ if(!r.ok){setErr(/mobile/.test(r.msg)?f.mobile:f.email,r.msg);return}
+ sessionStorage.setItem('asfs_otp',JSON.stringify({id:r.customer.id,mode:'register',next:'dashboard.html',dest:r.customer.mobile.replace(/\d(?=\d{3})/g,'•')}));
+ location.href='otp.html';});
+</script></body></html>

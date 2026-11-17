@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Our Services – AS Financial Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="at-assets/css/style.css"></head>
+<body data-base="">
+<div id="site-header"></div>
+<section class="page-head"><div class="container"><div class="crumbs"><a href="index.html">Home</a> / Services</div><h1>All Services</h1><p>Guidance across every major loan category. Rates shown are sample data for demonstration.</p></div></section>
+<section class="section"><div class="container"><div class="toolbar"><input class="input" id="q" placeholder="Search services…" style="min-width:260px"></div><div class="grid g3" id="svc-grid"></div><p id="none" class="hidden" style="color:var(--muted)">No services match your search.</p></div></section>
+<section class="section alt"><div class="container" style="text-align:center"><h2>Not sure which loan fits?</h2><p style="margin:14px 0 24px;color:var(--muted)">Talk to an expert or compare lenders side by side.</p><a class="btn btn-gold" href="contact.html">Talk to Our Expert</a> <a class="btn btn-outline" href="compare.html">Compare Loans</a></div></section>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script><script src="at-assets/js/pages.js"></script>
+<script>
+UI.mount('services');const grid=document.getElementById('svc-grid');Pages.services(grid);
+document.getElementById('q').addEventListener('input',e=>{const q=e.target.value.toLowerCase();let n=0;[...grid.children].forEach((c,i)=>{const l=AT.DB.loans()[i];const m=!q||(l.name+l.desc).toLowerCase().includes(q);c.classList.toggle('hidden',!m);if(m)n++});document.getElementById('none').classList.toggle('hidden',n>0)});
+</script></body></html>

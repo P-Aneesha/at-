@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Loan Service – AS Financial Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="at-assets/css/style.css"></head>
+<body data-base="">
+<div id="site-header"></div>
+<div id="detail"></div>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script><script src="at-assets/js/pages.js"></script>
+<script>
+UI.mount('services');const {icon,esc,fmtAmt}=UI;
+const id=new URLSearchParams(location.search).get('id');const loans=AT.DB.loans();const l=loans.find(x=>x.id===id)||loans[0];
+const root=document.getElementById('detail');
+if(!l){root.innerHTML='<section class="section"><div class="container"><h2>Service not found</h2><p><a class="link" href="services.html">Back to services</a></p></div></section>'}
+else{
+document.title=l.name+' – AS Financial Services';
+const lenders=AT.DB.lenders().filter(x=>x.enabled&&x.types.includes(l.id));
+root.innerHTML='<section class="page-head" style="background:'+l.grad+'"><div class="container"><div class="crumbs"><a href="index.html">Home</a> / <a href="services.html">Services</a> / '+esc(l.name)+'</div><h1>'+esc(l.name)+'</h1><p>'+esc(l.desc)+'</p><div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-gold" href="apply.html?type='+l.id+'">Apply Now</a><a class="btn btn-outline" style="color:#fff;border-color:#fff" href="emi-calculator.html">Calculate EMI</a></div></div></section>'+
+'<section class="section"><div class="container grid" style="grid-template-columns:1.4fr 1fr;gap:36px" id="dg"><div>'+
+'<span class="demo-note">Sample data for demonstration — not a real offer</span>'+
+'<div class="grid g2" style="margin:24px 0">'+[['Sample interest rate',l.rate+' p.a.'],['Loan amount','₹'+fmtAmt(l.minAmt)+' – ₹'+fmtAmt(l.maxAmt)],['Tenure',l.tenure],['Eligibility',l.eligibility]].map(k=>'<div class="card"><small style="color:var(--muted)">'+k[0]+'</small><div style="font:700 1.15rem var(--serif);color:var(--navy);margin-top:4px">'+esc(k[1])+'</div></div>').join('')+'</div>'+
+'<h2 style="font-size:1.6rem;margin-bottom:14px">Documents checklist</h2><ul style="list-style:none;display:grid;gap:10px">'+l.docs.map(d=>'<li class="card" style="padding:14px 18px;display:flex;gap:12px;align-items:center"><span style="color:var(--ok);width:20px">'+icon('check')+'</span>'+esc(d)+'</li>').join('')+'</ul>'+
+'<h2 style="font-size:1.6rem;margin:36px 0 14px">Lenders offering this (sample)</h2>'+
+(lenders.length?'<div class="table-wrap"><table class="tbl"><tr><th>Lender</th><th>Rate from</th><th>Fee</th><th></th></tr>'+lenders.map(x=>'<tr><td><b>'+esc(x.name)+'</b></td><td>'+x.rate+'%</td><td>'+x.fee+'%</td><td><a class="btn btn-outline btn-sm" href="compare.html?type='+l.id+'">Compare</a></td></tr>').join('')+'</table></div>':'<p style="color:var(--muted)">No active lender listings for this category right now.</p>')+
+'</div><aside><div class="card" style="position:sticky;top:100px"><h3 style="margin-bottom:8px">Need help choosing?</h3><p style="color:var(--muted);margin-bottom:18px;font-size:.92rem">Speak with an expert about '+esc(l.name.toLowerCase())+'.</p><a class="btn btn-gold btn-block" href="contact.html?service='+encodeURIComponent(l.name)+'">Talk to Our Expert</a><a class="btn btn-outline btn-block" style="margin-top:10px" href="apply.html?type='+l.id+'">Start Application</a></div></aside></div></section>';
+if(innerWidth<900)document.getElementById('dg').style.gridTemplateColumns='1fr';
+}
+</script></body></html>

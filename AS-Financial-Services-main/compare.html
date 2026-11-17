@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bank &amp; NBFC Partners – AS Financial Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="at-assets/css/style.css"></head>
+<body data-base="">
+<div id="site-header"></div>
+<section class="page-head"><div class="container"><div class="crumbs"><a href="index.html">Home</a> / Bank &amp; NBFC Partners</div><h1>Bank &amp; NBFC Partners</h1><p>Browse our listed institutions and compare illustrative home-loan details.</p><div style="margin-top:16px"><span class="demo-note">All figures below are demo placeholders, not actual lender terms or offers. Product availability varies by institution.</span></div></div></section>
+<section class="section"><div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+    <div><h2 style="margin-bottom:6px">Home Loan Comparison</h2><p style="color:var(--muted)">Demo figures only — contact the lender for current terms.</p></div>
+    <span class="tag" id="partner-count"></span>
+  </div>
+  <div class="table-wrap"><table class="tbl"><thead><tr><th>Lender</th><th>Interest rate (p.a.)</th><th>Loan amount</th><th>Tenure</th><th>Processing fee</th><th>Eligibility</th><th></th></tr></thead><tbody id="public-partners"></tbody></table></div>
+  <div class="card" style="margin-top:28px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+    <div><h3>Need current rates or eligibility details?</h3><p style="color:var(--muted);margin-top:5px">Contact our team for guidance based on your loan requirements.</p></div>
+    <a class="btn btn-gold" href="contact.html">Contact us</a>
+  </div>
+</div></section>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script>
+<script>
+UI.mount('lenders');const {esc,$}=UI;
+const publicPartners=[
+ ['SBI','Public sector bank',8.4,9.65],['HDFC Bank','Private bank',8.5,9.7],['ICICI Bank','Private bank',8.5,10.25],['Axis Bank','Private bank',8.75,10.5],['Kotak Mahindra Bank','Private bank',8.7,10.25],
+ ['Bank of Baroda','Public sector bank',8.4,10],['Canara Bank','Public sector bank',8.35,10],['Union Bank of India','Public sector bank',8.4,10.25],['Punjab National Bank','Public sector bank',8.5,10.25],['Indian Bank','Public sector bank',8.5,10.3],
+ ['IDFC FIRST Bank','Private bank',8.75,10.5],['Yes Bank','Private bank',9,11],['Federal Bank','Private bank',8.8,10.5],['IndusInd Bank','Private bank',9,11.5],['Bandhan Bank','Private bank',9.25,12.5],
+ ['UCO Bank','Public sector bank',8.55,10.5],['Central Bank of India','Public sector bank',8.55,10.5],['Indian Overseas Bank','Public sector bank',8.5,10.25],['Bank of India','Public sector bank',8.5,10.5],['IDBI Bank','Private bank',8.5,10.75],
+ ['Bajaj Finserv','NBFC / HFC',8.75,13],['Tata Capital','NBFC / HFC',8.75,14],['HDB Financial Services','NBFC / HFC',9.5,16],['L&T Finance','NBFC / HFC',8.75,15],['Muthoot Finance','NBFC / HFC',9,18],
+ ['Shriram Finance','NBFC / HFC',9,16],['Cholamandalam','NBFC / HFC',9.5,18],['Edelweiss','NBFC / HFC',9,14],['IIFL Finance','NBFC / HFC',9.5,18],['Sundaram Finance','NBFC / HFC',9,15],
+ ['Mahindra Finance','NBFC / HFC',9.5,17],['Hero FinCorp','NBFC / HFC',9.5,18],['Shriram City','NBFC / HFC',12,24],['CreditAccess Grameen','NBFC / HFC',18,26],['Tata Motors Finance','NBFC / HFC',9,18],
+ ['LIC Housing Finance','NBFC / HFC',8.5,11],['Reliance Home Finance','NBFC / HFC',9,14]
+];
+$('#partner-count').textContent=publicPartners.length+' institutions';
+const sampleTerms={
+ 'Public sector bank':{amount:'₹5 L – ₹5 Cr',tenure:'5 yrs – 30 yrs',fee:'0.5% – 1.0%'},
+ 'Private bank':{amount:'₹5 L – ₹5 Cr',tenure:'5 yrs – 30 yrs',fee:'0.5% – 1.5%'},
+ 'NBFC / HFC':{amount:'₹5 L – ₹5 Cr',tenure:'5 yrs – 30 yrs',fee:'1.0% – 2.0%'}
+};
+$('#public-partners').innerHTML=publicPartners.map(p=>{
+ const terms=sampleTerms[p[1]];
+ return '<tr><td><div style="display:flex;gap:12px;align-items:center"><div class="avatar" style="border-radius:12px">'+esc(p[0][0])+'</div><div><b style="color:var(--navy)">'+esc(p[0])+'</b><div><span class="tag" style="font-size:.66rem">Demo</span></div></div></div></td>'+
+  '<td><b>'+p[2]+'%</b> – '+p[3]+'%</td><td>'+terms.amount+'</td><td>'+terms.tenure+'</td><td>'+terms.fee+'</td><td style="font-size:.84rem;max-width:200px">Varies by lender and applicant</td>'+
+  '<td style="white-space:nowrap"><a class="btn btn-gold btn-sm" href="contact.html?service=Home%20loan%20rates">Ask about rates</a></td></tr>';
+}).join('');
+</script></body></html>

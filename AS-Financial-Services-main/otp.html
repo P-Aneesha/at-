@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verify OTP – AS Financial Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="at-assets/css/style.css"></head>
+<body data-base="">
+<div id="site-header"></div>
+<main class="auth">
+  <div class="auth-art"><h2>One more step</h2><p>We've sent a 6-digit code to verify it's you. This is a simulated OTP — no SMS is actually sent.</p></div>
+  <div class="auth-form"><div class="auth-card" style="text-align:center">
+    <h1>Verify OTP</h1><p id="sub"></p>
+    <div class="demo-note" style="margin-bottom:6px">Demo OTP: <b>123456</b></div>
+    <div class="otp-row" id="boxes"></div>
+    <div class="err-msg" id="err" style="text-align:center;margin-bottom:10px"></div>
+    <button class="btn btn-gold btn-block" id="verify">Verify &amp; Continue</button>
+    <p style="margin-top:20px;font-size:.9rem;color:var(--muted)">Didn't get it? <button class="link" id="resend" style="background:none;border-top:0;border-left:0;border-right:0;cursor:pointer;font:inherit" disabled>Resend OTP</button> <span id="timer"></span></p>
+    <p style="margin-top:14px"><a class="link" href="login.html">Back to login</a></p>
+  </div></div>
+</main>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script>
+<script>
+UI.mount('');const {$}=UI;
+let p;try{p=JSON.parse(sessionStorage.getItem('asfs_otp')||'null')}catch(e){}
+if(!p){location.replace('login.html')}else{
+$('#sub').textContent='Enter the code sent to mobile '+p.dest+' (simulated).';
+const boxes=$('#boxes');for(let i=0;i<6;i++){const b=document.createElement('input');b.maxLength=1;b.inputMode='numeric';b.setAttribute('aria-label','Digit '+(i+1));boxes.appendChild(b)}
+const ins=[...boxes.children];ins[0].focus();
+ins.forEach((el,i)=>{el.addEventListener('input',()=>{el.value=el.value.replace(/\D/g,'');if(el.value&&ins[i+1])ins[i+1].focus()});
+ el.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!el.value&&ins[i-1])ins[i-1].focus();if(e.key==='Enter')verify()});
+ el.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);t.split('').forEach((c,k)=>ins[k]&&(ins[k].value=c));(ins[Math.min(t.length,5)]).focus()})});
+function verify(){const code=ins.map(i=>i.value).join('');
+ if(code.length<6){$('#err').textContent='Enter the complete 6-digit code.';return}
+ if(code!=='123456'){$('#err').textContent='Incorrect OTP. For this demo use 123456.';ins.forEach(i=>i.value='');ins[0].focus();return}
+ AT.Auth.startCustomer(p.id,false);sessionStorage.removeItem('asfs_otp');UI.toast('Verified! Redirecting…','ok');setTimeout(()=>location.href=p.next||'dashboard.html',600)}
+$('#verify').onclick=verify;
+let t=30;const tick=()=>{$('#timer').textContent=t>0?'(in '+t+'s)':'';$('#resend').disabled=t>0;if(t>0){t--;setTimeout(tick,1000)}};tick();
+$('#resend').onclick=()=>{UI.toast('A new demo OTP has been sent: 123456','ok');t=30;tick()};
+setTimeout(()=>UI.toast('Demo OTP: 123456'),400);
+}
+</script></body></html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Loan Application – AS Financial Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="at-assets/css/style.css"></head>
+<body data-base="">
+<div id="site-header"></div>
+<section class="page-head"><div class="container"><div class="crumbs"><a href="index.html">Home</a> / Apply</div><h1>Loan Application</h1><p>Five quick steps. This is a demonstration — no real application is submitted to any lender.</p></div></section>
+<section class="section"><div class="container" style="max-width:860px">
+  <div class="stepper" id="stepper"><div>Personal</div><div>Employment</div><div>Loan</div><div>Documents</div><div>Review</div></div>
+  <div class="card" id="box"></div>
+</div></section>
+<div id="site-footer"></div>
+<script src="at-assets/js/store.js"></script><script src="at-assets/js/ui.js"></script>
+<script>
+UI.mount('');
+if(UI.Guard.customer()){
+const {$,$$,esc,setErr,V,inr,icon,fmtTen}=UI;const cust=AT.Auth.customer();const q=new URLSearchParams(location.search);
+const loans=AT.DB.loans();
+const KEY='asfs_draft_'+cust.id;
+let d;try{d=JSON.parse(sessionStorage.getItem(KEY)||'null')}catch(e){}
+if(!d){d={step:1,personal:{name:cust.name,dob:'',mobile:cust.mobile,email:cust.email,address:cust.city||''},employment:{type:'',company:'',income:'',experience:''},loan:{type:q.get('type')||'personal-loan',amount:+q.get('amount')||'',tenure:+q.get('tenure')||60,purpose:''},docs:{identity:'',address:'',income:''}}}
+if(q.get('type'))d.loan.type=q.get('type');if(+q.get('amount'))d.loan.amount=+q.get('amount');if(+q.get('tenure'))d.loan.tenure=+q.get('tenure');
+const save=()=>sessionStorage.setItem(KEY,JSON.stringify(d));
+const TEN=[12,24,36,48,60,84,120,180,240,360];const previews={};
+const fld=(l,n,v,t,extra)=>'<div><label class="lbl">'+l+'</label><input class="input" name="'+n+'" type="'+(t||'text')+'" value="'+esc(v)+'" '+(extra||'')+'></div>';
+const sel=(l,n,opts,v)=>'<div><label class="lbl">'+l+'</label><select class="input" name="'+n+'">'+opts.map(o=>{const val=Array.isArray(o)?o[0]:o,lab=Array.isArray(o)?o[1]:o;return '<option value="'+esc(val)+'"'+(String(val)===String(v)?' selected':'')+'>'+esc(lab)+'</option>'}).join('')+'</select></div>';
+const nav=(back,label)=>'<div class="row-between" style="margin-top:28px">'+(back?'<button type="button" class="btn btn-outline" id="back">← Back</button>':'<span></span>')+'<button class="btn btn-gold" type="submit">'+label+'</button></div>';
+function paintStepper(){$$('#stepper div').forEach((s,i)=>{s.className=i+1<d.step?'done':i+1===d.step?'on':''})}
+function view(){paintStepper();save();const b=$('#box');window.scrollTo({top:140,behavior:'smooth'});
+ if(d.step===1){const p=d.personal;b.innerHTML='<h2 style="font-size:1.6rem;margin-bottom:20px">Personal information</h2><form id="f" novalidate class="form-grid">'+fld('Full name','name',p.name)+fld('Date of birth','dob',p.dob,'date','max="'+new Date(Date.now()-18*365.25*864e5).toISOString().slice(0,10)+'"')+fld('Mobile number','mobile',p.mobile,'text','inputmode="numeric" maxlength="10"')+fld('Email','email',p.email,'email')+'<div class="full"><label class="lbl">Address</label><textarea class="input" name="address" rows="3" placeholder="House no., street, city, PIN">'+esc(p.address)+'</textarea></div><div class="full">'+nav(false,'Continue →')+'</div></form>';
+  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target;let ok=true;
+   ok=setErr(f.elements.name,f.elements.name.value.trim().length<2?'Enter your full name.':'')&&ok;
+   ok=setErr(f.dob,!f.dob.value?'Select your date of birth.':(f.dob.value>f.dob.max?'You must be at least 18 years old.':''))&&ok;
+   ok=setErr(f.mobile,!V.mobile(f.mobile.value.trim())?'Enter a valid 10-digit mobile number.':'')&&ok;
+   ok=setErr(f.email,!V.email(f.email.value.trim())?'Enter a valid email address.':'')&&ok;
+   ok=setErr(f.address,f.address.value.trim().length<8?'Enter your full address.':'')&&ok;if(!ok)return;
+   d.personal={name:f.elements.name.value.trim(),dob:f.dob.value,mobile:f.mobile.value.trim(),email:f.email.value.trim(),address:f.address.value.trim()};d.step=d.editing?5:2;d.editing=false;view()}}
+ else if(d.step===2){const m=d.employment;b.innerHTML='<h2 style="font-size:1.6rem;margin-bottom:20px">Employment information</h2><form id="f" novalidate class="form-grid">'+sel('Employment type','type',[['','Select…'],'Salaried','Self-employed','Business owner','Professional','Student / Other'],m.type)+fld('Company / business name','company',m.company)+fld('Monthly income (₹)','income',m.income,'number','min="0"')+fld('Work experience (years)','experience',m.experience,'number','min="0" max="60" step="0.5"')+'<div class="full">'+nav(true,'Continue →')+'</div></form>';
+  $('#back').onclick=()=>{d.step=1;view()};
+  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target;let ok=true;
+   ok=setErr(f.type,!f.type.value?'Select your employment type.':'')&&ok;
+   ok=setErr(f.company,f.company.value.trim().length<2?'Enter your company or business name.':'')&&ok;
+   ok=setErr(f.income,!(+f.income.value>=5000)?'Enter a monthly income of at least ₹5,000.':'')&&ok;
+   ok=setErr(f.experience,f.experience.value===''||+f.experience.value<0?'Enter your work experience in years.':'')&&ok;if(!ok)return;
+   d.employment={type:f.type.value,company:f.company.value.trim(),income:+f.income.value,experience:+f.experience.value};d.step=d.editing?5:3;d.editing=false;view()}}
+ else if(d.step===3){const l=d.loan;b.innerHTML='<h2 style="font-size:1.6rem;margin-bottom:20px">Loan requirements</h2><form id="f" novalidate class="form-grid">'+sel('Loan type','type',loans.map(x=>[x.id,x.name]),l.type)+fld('Required amount (₹)','amount',l.amount,'number','min="0"')+sel('Preferred tenure','tenure',TEN.map(t=>[t,fmtTen(t)]),l.tenure)+'<div><label class="lbl">Loan purpose</label><input class="input" name="purpose" value="'+esc(l.purpose)+'" placeholder="e.g. Home renovation"></div><div class="full" id="hint" style="font-size:.85rem;color:var(--muted)"></div><div class="full">'+nav(true,'Continue →')+'</div></form>';
+  const hint=()=>{const lo=loans.find(x=>x.id===$('#f').type.value);$('#hint').textContent=lo?'Sample range: '+inr(lo.minAmt)+' – '+inr(lo.maxAmt)+' • Sample rate '+lo.rate+' p.a.':''};$('#f').type.onchange=hint;hint();
+  $('#back').onclick=()=>{d.step=2;view()};
+  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target;let ok=true;const lo=loans.find(x=>x.id===f.type.value);
+   ok=setErr(f.amount,!(+f.amount.value>0)?'Enter the required amount.':(lo&&(+f.amount.value<lo.minAmt||+f.amount.value>lo.maxAmt)?'For '+lo.name+', enter between '+inr(lo.minAmt)+' and '+inr(lo.maxAmt)+'.':''))&&ok;
+   ok=setErr(f.purpose,f.purpose.value.trim().length<3?'Briefly describe the loan purpose.':'')&&ok;if(!ok)return;
+   d.loan={type:f.type.value,amount:+f.amount.value,tenure:+f.tenure.value,purpose:f.purpose.value.trim()};d.step=d.editing?5:4;d.editing=false;view()}}
+ else if(d.step===4){const slot=(k,l)=>'<div class="doc-slot '+(d.docs[k]?'has':'')+'" id="slot-'+k+'"><b style="color:var(--navy)">'+l+'</b><div style="font-size:.8rem;color:var(--muted);margin:4px 0 10px">PDF, JPG or PNG • max 2 MB • demo only</div><div id="pv-'+k+'">'+(d.docs[k]?'<div style="color:var(--ok);font-weight:600">'+icon('check')+'</div>'+(previews[k]?'<img class="pv" src="'+previews[k]+'" alt="">':'')+'<div style="font-size:.85rem">'+esc(d.docs[k])+'</div>':'')+'</div><label class="btn btn-outline btn-sm" style="margin-top:8px;cursor:pointer">'+icon('upload')+' '+(d.docs[k]?'Replace':'Upload')+'<input type="file" data-k="'+k+'" accept=".pdf,.jpg,.jpeg,.png" hidden></label></div>';
+  b.innerHTML='<h2 style="font-size:1.6rem;margin-bottom:6px">Document upload</h2><p style="color:var(--muted);margin-bottom:20px">Placeholders only — files stay in your browser and are not uploaded anywhere. You can also upload later from your dashboard.</p><form id="f"><div class="grid g3">'+slot('identity','Identity proof')+slot('address','Address proof')+slot('income','Income proof')+'</div>'+nav(true,'Continue →')+'</form>';
+  $$('input[type=file]',b).forEach(i=>i.onchange=()=>{const f=i.files[0];if(!f)return;if(f.size>2*1024*1024){UI.toast('File is larger than 2 MB.','err');i.value='';return}
+   if(!/\.(pdf|jpe?g|png)$/i.test(f.name)){UI.toast('Unsupported file type.','err');i.value='';return}
+   d.docs[i.dataset.k]=f.name;previews[i.dataset.k]=/image/.test(f.type)?URL.createObjectURL(f):'';view()});
+  $('#back').onclick=()=>{d.step=3;view()};
+  $('#f').onsubmit=e=>{e.preventDefault();d.step=5;view()}}
+ else if(d.step===5){const p=d.personal,m=d.employment,l=d.loan,lo=loans.find(x=>x.id===l.type);
+  const sec=(t,s,rows)=>'<div class="review-sec"><div class="row-between"><h3 style="font-size:1.1rem">'+t+'</h3><button class="btn btn-ghost btn-sm" data-edit="'+s+'">'+icon('edit')+' Edit</button></div><dl class="kv">'+rows.map(r=>'<dt>'+r[0]+'</dt><dd>'+esc(r[1]||'—')+'</dd>').join('')+'</dl></div>';
+  const e1=AT.emi(l.amount,parseFloat(lo.rate)||10,l.tenure);
+  b.innerHTML='<h2 style="font-size:1.6rem;margin-bottom:20px">Review &amp; submit</h2>'+sec('Personal information',1,[['Name',p.name],['Date of birth',p.dob],['Mobile',p.mobile],['Email',p.email],['Address',p.address]])+sec('Employment',2,[['Type',m.type],['Company',m.company],['Monthly income',inr(m.income)],['Experience',m.experience+' years']])+sec('Loan requirements',3,[['Loan type',lo.name],['Amount',inr(l.amount)],['Tenure',fmtTen(l.tenure)],['Purpose',l.purpose],['Indicative EMI',inr(e1.emi)+' at '+(parseFloat(lo.rate)||10)+'% (sample)']])+sec('Documents',4,[['Identity proof',d.docs.identity||'Not uploaded'],['Address proof',d.docs.address||'Not uploaded'],['Income proof',d.docs.income||'Not uploaded']])+
+  '<label class="check" style="margin:18px 0"><input type="checkbox" id="decl"> <span>I confirm the information is correct and understand this is a demonstration, not a real loan application.</span></label><div class="err-msg" id="decl-err"></div><div class="row-between"><button class="btn btn-outline" id="back">← Back</button><button class="btn btn-gold" id="submit">Submit Application</button></div>';
+  $$('[data-edit]',b).forEach(x=>x.onclick=()=>{d.step=+x.dataset.edit;d.editing=true;view()});
+  $('#back').onclick=()=>{d.step=4;view()};
+  $('#submit').onclick=()=>{if(!$('#decl').checked){$('#decl-err').textContent='Please confirm the declaration to submit.';return}
+   const app=AT.DB.addApplication({customerId:cust.id,type:l.type,amount:l.amount,tenure:l.tenure,purpose:l.purpose,personal:p,employment:m,docs:d.docs,lenderId:q.get('lender')||''});
+   AT.DB.updateCustomer(cust.id,{docs:Object.assign({},cust.docs,d.docs)});sessionStorage.removeItem(KEY);
+   $$('#stepper div').forEach(s=>s.className='done');window.scrollTo({top:140,behavior:'smooth'});
+   b.innerHTML='<div class="success"><div class="ok-ic">'+icon('check')+'</div><h2>Application submitted!</h2><p style="color:var(--muted);margin:10px 0">Your demo application reference number is</p><div class="ref">'+esc(app.ref)+'</div><p style="color:var(--muted);max-width:480px;margin:0 auto 24px;font-size:.92rem">Track its status from your dashboard. This is a demonstration — no lender has received this application.</p><div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn btn-gold" href="dashboard.html#applications">Track Application</a><a class="btn btn-outline" href="index.html">Back to Home</a></div></div>'}}
+}
+view();
+}
+</script></body></html>

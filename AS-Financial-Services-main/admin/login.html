@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Login – AS Financial Services</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="../at-assets/css/style.css"></head>
+<body data-base="../" class="admin-body">
+<header class="nav"><div class="container nav-in"><a class="logo" href="../index.html"><span class="logo-mark">AS</span><span>AS Financial Services<small>Admin Console</small></span></a><a class="btn btn-outline btn-sm" style="color:#fff;border-color:#3a4766" href="../index.html">← Back to website</a></div></header>
+<main class="auth admin-auth">
+  <div class="auth-art">
+    <div class="role-pill" style="align-self:flex-start;margin:0">ADMIN ACCESS</div>
+    <svg viewBox="0 0 320 170" width="320" aria-hidden="true"><g fill="none" stroke="#E3BE4C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="10" width="300" height="150" rx="14" stroke="#27324f"/><path d="M10 44h300" stroke="#27324f"/><circle cx="28" cy="27" r="4" fill="#E3BE4C"/><rect x="26" y="62" width="60" height="80" rx="6" stroke="#27324f"/><polyline points="110,130 150,100 190,112 230,76 285,58"/><path d="M110 142h175" stroke="#27324f"/></g></svg>
+    <h2>Administration Console</h2><p style="color:#9AA8C2">Manage customers, applications, enquiries, lenders and website content from one secure workspace.</p>
+    <ul style="color:#C7D2E6"><li id="b1"></li><li id="b2"></li><li id="b3"></li></ul>
+  </div>
+  <div class="auth-form"><div class="auth-card">
+    <h1>Admin Login</h1><p>Authorised administrators only.</p>
+    <div class="demo-note hidden" id="denied" style="margin-bottom:16px;background:#FBDADA;border-color:#D64545;color:#a12929">Access denied: customer accounts cannot open the admin area. Please sign in with administrator credentials.</div>
+    <form id="f" novalidate>
+      <div style="margin-bottom:16px"><label class="lbl">Admin email</label><input class="input" name="email" autocomplete="username" placeholder="admin@atsolutions.com"></div>
+      <div style="margin-bottom:16px"><label class="lbl">Password</label><div class="pw"><input class="input" name="pass" type="password" autocomplete="current-password" placeholder="Password"><button type="button" aria-label="Show password"></button></div></div>
+      <div class="row-between" style="margin-bottom:22px"><label class="check"><input type="checkbox" checked disabled> Session ends when browser closes</label></div>
+      <button class="btn btn-navy btn-block" type="submit">Sign in to Admin</button>
+    </form>
+    <div class="demo-note" style="margin-top:20px;width:100%;flex-wrap:wrap">Demo credentials: <b>admin@atsolutions.com</b> / <b>Admin@123</b></div>
+    <div class="divider"><span>Not an administrator?</span></div>
+    <a class="btn btn-outline btn-block" href="../login.html">Customer Login</a>
+    <p style="text-align:center;margin-top:16px;font-size:.75rem;color:var(--muted)">Simulated, browser-only authentication for demonstration. Production requires secure server-side auth and role checks.</p>
+  </div></div>
+</main>
+<script src="../at-assets/js/store.js"></script><script src="../at-assets/js/ui.js"></script>
+<script>
+const {$,setErr,V,icon}=UI;UI.pwToggle(document);
+$('#b1').innerHTML=icon('check')+' Role-based access control';$('#b2').innerHTML=icon('check')+' Live application management';$('#b3').innerHTML=icon('check')+' Reports &amp; analytics';
+if(new URLSearchParams(location.search).get('denied'))$('#denied').classList.remove('hidden');
+if(AT.Auth.admin())location.replace('dashboard.html');
+$('#f').addEventListener('submit',e=>{e.preventDefault();const f=e.target;let ok=true;
+ ok=setErr(f.email,!V.email(f.email.value.trim())?'Enter a valid admin email address.':'')&&ok;
+ ok=setErr(f.pass,!f.pass.value?'Enter your password.':'')&&ok;if(!ok)return;
+ const r=AT.Auth.loginAdmin(f.email.value,f.pass.value);
+ if(!r.ok){setErr(f.pass,r.msg);return}
+ UI.toast('Welcome, administrator.','ok');setTimeout(()=>location.href='dashboard.html',400)});
+</script></body></html>
